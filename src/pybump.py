@@ -121,11 +121,12 @@ def read_version_from_file(file_path, app_version):
             current_version = get_version_from_file(file_content)
             file_type = 'python'
         elif file_extension == '.yaml' or file_extension == '.yml':  # Case Helm chart files
+            file_content = None
             try:
                 yaml = YAML()
                 file_content = yaml.load(stream)
             except YAMLError as exc:
-                print(exc)
+                raise ValueError("Invalid YAML file: {0}".format(exc))
             # Make sure Helm chart is valid and contains minimal mandatory keys
             if is_valid_helm_chart(file_content):
                 file_type = 'helm_chart'
